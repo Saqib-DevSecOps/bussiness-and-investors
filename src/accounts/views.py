@@ -14,14 +14,14 @@ from src.portal.business.models import Business
 @method_decorator(login_required, name='dispatch')
 class CrossAuth(View):
     def get(self, request):
-        if not request.user.is_completed:
+        if not self.request.user.is_completed:
             return redirect('accounts:identification_check')
-        if request.user.is_superuser:
+        if self.request.user.is_superuser:
             return redirect('admin/')
-        if request.user.is_business:
-            return redirect('business:dashboard/')
+        if self.request.user.is_business:
+            return redirect('business:dashboard')
         else:
-            return redirect('investor:dashboard/')
+            return redirect('investor:dashboard')
 
 
 @method_decorator(login_required, name='dispatch')
@@ -65,6 +65,6 @@ class BusinessUserConfirm(CreateView):
         form.instance.status = True
         user = self.request.user
         user.is_business = True
-        user.is_complete = True
+        user.is_completed = True
         user.save()
         return super(BusinessUserConfirm, self).form_valid(form)

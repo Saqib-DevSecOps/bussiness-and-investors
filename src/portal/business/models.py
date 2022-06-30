@@ -13,6 +13,12 @@ class Category(models.Model):
         return self.title
 
 
+filling_status = (
+    ('True', u'Yes'),
+    ('False', u'No')
+)
+
+
 class Business(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     business_name = models.CharField(max_length=200)
@@ -23,7 +29,7 @@ class Business(models.Model):
     cro = models.CharField(max_length=200)
     registration_number = models.CharField(max_length=200)
     registration_date = models.DateTimeField(null=True, blank=False)
-    mandatory_filling = models.BooleanField(default=False)
+    mandatory_filling = models.CharField(choices=filling_status,max_length=20)
     phone_no = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -80,9 +86,8 @@ class Project_Investor(models.Model):
 
 class Payment(models.Model):
     payment_id = models.IntegerField()
-    project_investor = models.ForeignKey(Project_Investor,on_delete=models.SET_NULL,null=True,blank=True)
+    project_investor = models.ForeignKey(Project_Investor, on_delete=models.SET_NULL, null=True, blank=True)
     amount = models.IntegerField()
 
     def __str__(self):
         return self.payment_id
-
