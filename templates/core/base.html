@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- BootStrap Link -->
+    <link rel="stylesheet" href="{% static 'website/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'website/css/animate.css' %}">
+
+    <!-- Icon Link -->
+    <link rel="stylesheet" href="{% static 'website/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'website/css/line-awesome.min.css' %}">
+
+    <!-- Plugings Link -->
+    <link rel="stylesheet" href="{% static 'website/css/slick.css' %}">
+    <link rel="stylesheet" href="{% static 'website/css/nice-select.css' %}">
+    <link rel="stylesheet" href="{% static 'website/css/odometer.css' %}">
+
+    <!-- Custom Link -->
+    <link rel="stylesheet" href="{% static 'website/css/main.css' %}">
+    <link rel="shortcut icon" href="{% static 'website/images/favicon.png' %}" type="image/x-icon">
+
+    <title>Digital - Investment Business </title>
+
+</head>
+
+<body> 
+    {% include 'core/include/header.html' %}
+    <div class="preloader">
+        <div class="preinnner">
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="ring"></div>
+        </div>
+    </div>
+    <div class="overlay"></div>
+
+    {% block content %}
+   
+    {% endblock content %}
+
+    {% include 'core/include/footer.html' %}
+
+
+
+    
+
+    <a href="#0" class="scrollToTop"><i class="las la-rocket"></i></a>
+    <script data-cfasync="false" src="../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script src="{% static 'website/js/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'website/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'website/js/slick.min.js' %}"></script>
+    <script src="{% static 'website/js/nice-select.js' %}"></script>
+    <script src="{% static 'website/js/odometer.min.js' %}"></script>
+    <script src="{% static 'website/js/viewport.jquery.js' %}"></script>
+    <script src="{% static 'website/js/main.js' %}"></script>
+</body>
+
+<!-- Mirrored from template.viserlab.com/digihyip/demo/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 29 Jun 2022 06:01:23 GMT -->
+</html>
