@@ -63,12 +63,36 @@ class ProjectDeleteView(DeleteView):
 
 
 @method_decorator(business_required, name='dispatch')
-class InvestorShares(CreateView):
+class ProjectShareList(CreateView):
     model = Shares
-    fields = [ 'status', 'value']
+    fields = ['status', 'value', 'percentage_equity']
     template_name = 'business/project_investor_create.html'
+    success_url = reverse_lazy('business:project_list')
 
     def form_valid(self, form):
-        project = Project.objecs.get(id=self.kwargs['pk'])
+        project = Project.objects.get(id=self.kwargs['pk'])
         form.instance.project = project
-        return super(InvestorShares, self).form_valid(form)
+        return super(ProjectShareList, self).form_valid(form)
+
+@method_decorator(business_required, name='dispatch')
+class ProjectShareUpdate(UpdateView):
+    model = Shares
+    fields = ['status', 'value', 'percentage_equity']
+    template_name = 'business/project_investor_create.html'
+    success_url = reverse_lazy('business:project_list')
+
+
+@method_decorator(business_required, name='dispatch')
+class ProjectShareDelete(DeleteView):
+    model = Shares
+    template_name = 'business/project_share_delete.html'
+    success_url = reverse_lazy('business:project_list')
+
+
+@method_decorator(business_required, name='dispatch')
+class SharesListView(ListView):
+    model = Shares
+    template_name = 'business/shares_list.html'
+
+    def get_queryset(self):
+        return Shares.objects.filter(project_id=self.kwargs['pk'])

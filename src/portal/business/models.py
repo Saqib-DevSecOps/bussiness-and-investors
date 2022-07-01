@@ -70,6 +70,8 @@ class Shares(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     status = models.CharField(choices=choices, max_length=20, default='equity')
     value = models.PositiveIntegerField(default=0)
+    percentage_equity = models.DecimalField(max_digits=4,decimal_places=2)
+    sell_equity = models.IntegerField(default=0)
 
     def __str__(self):
         return self.status
