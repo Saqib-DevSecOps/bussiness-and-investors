@@ -57,6 +57,8 @@ class Project(models.Model):
     logo = models.ImageField(upload_to='projects/')
     business = models.ForeignKey(Business, on_delete=models.CASCADE)
     website = models.CharField(max_length=120, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
