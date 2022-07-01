@@ -4,10 +4,10 @@ from django.shortcuts import render
 # Create your views here.
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.views.generic import ListView, TemplateView, CreateView, UpdateView
+from django.views.generic import ListView, TemplateView, CreateView, UpdateView, DeleteView, DetailView
 
 from src.accounts.decorators import business_required
-from src.portal.business.models import Business, Project, Investor
+from src.portal.business.models import Business, Project, Investor, Project_Investor
 
 
 @method_decorator(business_required, name='dispatch')
@@ -21,25 +21,28 @@ class BusinessDashboard(TemplateView):
         context['project_count'] = project.count()
         return context
 
-@method_decorator(business_required,name='dispatch')
+
+@method_decorator(business_required, name='dispatch')
 class ProjectListView(ListView):
     model = Project
 
     def get_queryset(self):
         user = self.request.user
-        return Project.objects.select_related('business').filter(business__user = user)
+        return Project.objects.select_related('business').filter(business__user=user)
+
 
 @method_decorator(business_required, name='dispatch')
 class ProjectCreateView(CreateView):
     model = Project
-    fields = ['name', 'logo', 'category', 'website']
+    fields = ['name', 'logo', 'category', 'total_price', 'total_shares', 'website']
     success_url = reverse_lazy('business:dashboard')
 
     def form_valid(self, form):
         business = Business.objects.get(user=self.request.user)
         form.instance.business = business
-        messages.success(self.request,'Project Created Successfully')
+        messages.success(self.request, 'Project Created Successfully')
         return super(ProjectCreateView, self).form_valid(form)
+
 
 @method_decorator(business_required, name='dispatch')
 class ProjectUpdateView(UpdateView):
@@ -50,5 +53,25 @@ class ProjectUpdateView(UpdateView):
     def form_valid(self, form):
         business = Business.objects.get(user=self.request.user)
         form.instance.business = business
-        messages.success(self.request,'Project Updated Successfully')
+        messages.success(self.request, 'Project Updated Successfully')
         return super(ProjectUpdateView, self).form_valid(form)
+
+
+@method_decorator(business_required, name='dispatch')
+class ProjectDeleteView(DeleteView):
+    template_name = 'business/project_delete.html'
+    model = Project
+    success_url = reverse_lazy('business:dashboard')
+
+    def get_queryset(self):
+        user = self.request.user
+        return Project.objects.select_related('business').filter(business__user=user)
+
+
+@method_decorator(business_required,name='dispatch')
+class InvestorShares(DetailView):
+    model = Project_Investor
+    template_name = 'business/project_investor_list.html'
+
+
+

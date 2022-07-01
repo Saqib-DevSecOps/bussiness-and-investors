@@ -56,6 +56,9 @@ class Project(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     logo = models.ImageField(upload_to='projects/')
     business = models.ForeignKey(Business, on_delete=models.CASCADE)
+    total_price = models.PositiveIntegerField(default=0)
+    total_shares = models.PositiveIntegerField(default=0)
+    sell_shares = models.PositiveIntegerField(default=0)
     website = models.CharField(max_length=120, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -68,13 +71,13 @@ class Shares(models.Model):
     choices = (
         ('sin', 'Single Owner'),
         ('shared', 'Shared Owner'),
+        ('equity','Equity'),
+        ('value','Value')
     )
-    equity = models.DecimalField(max_digits=4, decimal_places=2)
-    owner = models.CharField(choices=choices, max_length=20)
-    value = models.IntegerField()
+    status = models.CharField(choices=choices, max_length=20)
 
     def __str__(self):
-        return self.id
+        return self.status
 
 
 class Project_Investor(models.Model):

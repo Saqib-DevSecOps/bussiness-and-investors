@@ -22,6 +22,6 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('accounts/', include('src.accounts.urls')),
     path('business/', include('src.portal.business.urls')),
-    # path('', include('src.portal.investoer.urls')),
+    path('', include('src.portal.investor.urls')),
    
 ]

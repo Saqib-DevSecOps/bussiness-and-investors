@@ -1,16 +1,10 @@
 {% extends 'core/base_dashboard.html' %}
 {% load static %}
 
-{% block base_title %} Jobs {% endblock %}
-{% block page_heading %} Jobs {% endblock %}
+{% block base_title %} Projects {% endblock %}
+{% block page_heading %} Project {% endblock %}
 
 {% block content %}
-
-<div class="row mb-2">
-    <div class="col-12">
-        <a href="" class="btn btn-primary">Projects</a>
-    </div>
-</div>
 
 <div class="row">
     <div class="col-12">
@@ -20,14 +14,15 @@
                 {% if object_list %}
 
                 <div class="table-responsive">
-                    <table class=" table-hover">
+                    <table class="table table-centered table-nowrap table-hover">
                         <thead class="thead-light">
                         <tr>
                             <th scope="col">Name</th>
-                            <th scope="col">category</th>
-                            <th scope="col">website</th>
-                            <th scope="col">Created at</th>
-                            <th scope="col">Updated at</th>
+                            <th scope="col">Website</th>
+                            <th scope="col">Total Price</th>
+                            <th scope="col">Total Shares</th>
+                            <th scope="col">Sell Shares</th>
+                            <th scope="col">Share Holders</th>
                             <th scope="col">Actions</th>
                         </tr>
                         </thead>
@@ -37,13 +32,10 @@
                             <td>
                                 <p class="mb-0">
                                     <b><a href="#">{{ object.name }}</a></b>
+                                </p>
+                                <p class="mb-0 small">{{ object.category }}</p>
                             </td>
 
-                            <td>
-                                <p class="mb-0">
-                                    <b><a href="#">{{ object.category }}</a>
-                                    </b>
-                            </td>
                             <td>
                                 <p class="mb-0">
                                     <b><a href="#">{{ object.website }}</a>
@@ -51,13 +43,22 @@
                             </td>
                             <td>
                                 <p class="mb-0">
-                                    <b><a href="#">{{ object.created_at.date }}</a>
+                                    <b><a href="#">{{ object.total_price }}</a>
                                     </b>
                             </td>
                             <td>
                                 <p class="mb-0">
-                                    <b><a href="#">{{ object.updated_at.date }}</a>
+                                    <b><a href="#">{{ object.total_shares }}</a>
                                     </b>
+                            </td>
+                            <td>
+                                <p class="mb-0">
+                                    <b><a href="#">{{ object.sell_shares }}</a>
+                                    </b>
+                            </td>
+                            <td>
+                                <p class="mb-0">
+                                    <a href="{% url 'business:investor_shares' object.pk %}" class="btn btn-primary btn-sm">View</a>
                             </td>
 
 
@@ -65,7 +66,7 @@
                                 <a href="">
                                     <b><i class="fa fa-edit"></i> </b>
                                 </a>
-                                <a href="" class="text-danger">
+                                <a href="{% url 'business:project_delete' object.pk %}" class="text-danger">
                                     <b><i class="fa fa-trash"></i> </b>
                                 </a>
                             </td>
