@@ -18,11 +18,10 @@
                         <thead class="thead-light">
                         <tr>
                             <th scope="col">Name</th>
+                            <th scope="col">Category</th>
                             <th scope="col">Website</th>
-                            <th scope="col">Total Price</th>
-                            <th scope="col">Total Shares</th>
-                            <th scope="col">Sell Shares</th>
                             <th scope="col">Share Holders</th>
+                            <th scope="col">Sell Shares</th>
                             <th scope="col">Actions</th>
                         </tr>
                         </thead>
@@ -33,7 +32,11 @@
                                 <p class="mb-0">
                                     <b><a href="#">{{ object.name }}</a></b>
                                 </p>
-                                <p class="mb-0 small">{{ object.category }}</p>
+                            </td>
+                            <td>
+                                <p class="mb-0">
+                                    <b><a href="#">{{ object.category }}</a></b>
+                                </p>
                             </td>
 
                             <td>
@@ -43,27 +46,17 @@
                             </td>
                             <td>
                                 <p class="mb-0">
-                                    <b><a href="#">{{ object.total_price }}</a>
-                                    </b>
+                                    <a href="{% url 'business:investor_shares' object.pk %}" class="btn  "><i class="fa fa-eye"></i></a>
                             </td>
                             <td>
                                 <p class="mb-0">
-                                    <b><a href="#">{{ object.total_shares }}</a>
-                                    </b>
-                            </td>
-                            <td>
-                                <p class="mb-0">
-                                    <b><a href="#">{{ object.sell_shares }}</a>
-                                    </b>
-                            </td>
-                            <td>
-                                <p class="mb-0">
-                                    <a href="{% url 'business:investor_shares' object.pk %}" class="btn btn-primary btn-sm">View</a>
+                                    <a href="{% url 'business:investor_shares' object.pk %}"
+                                       class="btn btn-success btn-sm">Sell</a>
                             </td>
 
 
                             <td>
-                                <a href="">
+                                <a href="{% url 'business:project_update' object.pk %}">
                                     <b><i class="fa fa-edit"></i> </b>
                                 </a>
                                 <a href="{% url 'business:project_delete' object.pk %}" class="text-danger">

@@ -29,7 +29,7 @@ class Business(models.Model):
     cro = models.CharField(max_length=200)
     registration_number = models.CharField(max_length=200)
     registration_date = models.DateTimeField(null=True, blank=False)
-    mandatory_filling = models.CharField(choices=filling_status,max_length=20)
+    mandatory_filling = models.CharField(choices=filling_status, max_length=20)
     phone_no = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -56,9 +56,6 @@ class Project(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     logo = models.ImageField(upload_to='projects/')
     business = models.ForeignKey(Business, on_delete=models.CASCADE)
-    total_price = models.PositiveIntegerField(default=0)
-    total_shares = models.PositiveIntegerField(default=0)
-    sell_shares = models.PositiveIntegerField(default=0)
     website = models.CharField(max_length=120, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -69,24 +66,24 @@ class Project(models.Model):
 
 class Shares(models.Model):
     choices = (
-        ('sin', 'Single Owner'),
-        ('shared', 'Shared Owner'),
-        ('equity','Equity'),
-        ('value','Value')
-    )
-    status = models.CharField(choices=choices, max_length=20)
+        ('equity', 'Equity'),)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    status = models.CharField(choices=choices, max_length=20, default='equity')
+    value = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.status
 
 
 class Project_Investor(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
     investor = models.ForeignKey(Investor, on_delete=models.CASCADE)
     share = models.ForeignKey(Shares, on_delete=models.CASCADE)
+    value = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.project.name}   {self.investor.user.username}'
+        return f'{self.investor.user.username}'
 
 
 class Payment(models.Model):

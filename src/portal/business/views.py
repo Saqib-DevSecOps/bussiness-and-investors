@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic import ListView, TemplateView, CreateView, UpdateView, DeleteView, DetailView
 
 from src.accounts.decorators import business_required
-from src.portal.business.models import Business, Project, Investor, Project_Investor
+from src.portal.business.models import Business, Project, Investor, Project_Investor, Shares
 
 
 @method_decorator(business_required, name='dispatch')
@@ -34,7 +34,7 @@ class ProjectListView(ListView):
 @method_decorator(business_required, name='dispatch')
 class ProjectCreateView(CreateView):
     model = Project
-    fields = ['name', 'logo', 'category', 'total_price', 'total_shares', 'website']
+    fields = ['name', 'logo', 'category', 'website']
     success_url = reverse_lazy('business:dashboard')
 
     def form_valid(self, form):
@@ -50,12 +50,6 @@ class ProjectUpdateView(UpdateView):
     fields = ['name', 'logo', 'category', 'website']
     success_url = reverse_lazy('business:dashboard')
 
-    def form_valid(self, form):
-        business = Business.objects.get(user=self.request.user)
-        form.instance.business = business
-        messages.success(self.request, 'Project Updated Successfully')
-        return super(ProjectUpdateView, self).form_valid(form)
-
 
 @method_decorator(business_required, name='dispatch')
 class ProjectDeleteView(DeleteView):
@@ -68,10 +62,13 @@ class ProjectDeleteView(DeleteView):
         return Project.objects.select_related('business').filter(business__user=user)
 
 
-@method_decorator(business_required,name='dispatch')
-class InvestorShares(DetailView):
-    model = Project_Investor
-    template_name = 'business/project_investor_list.html'
+@method_decorator(business_required, name='dispatch')
+class InvestorShares(CreateView):
+    model = Shares
+    fields = [ 'status', 'value']
+    template_name = 'business/project_investor_create.html'
 
-
-
+    def form_valid(self, form):
+        project = Project.objecs.get(id=self.kwargs['pk'])
+        form.instance.project = project
+        return super(InvestorShares, self).form_valid(form)
