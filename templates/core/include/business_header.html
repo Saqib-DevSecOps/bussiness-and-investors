@@ -7,7 +7,7 @@
 </li>
 
 <li class="nav-item">
-    <a class="nav-link" href="/">
+    <a class="nav-link" href="{% url 'business:dashboard' %}">
         <i class="bx bx-sitemap mr-2"></i>Dashboard
     </a>
 </li>
@@ -21,11 +21,12 @@
     <div class="dropdown-menu" aria-labelledby="topnav-components">
         <a href="{% url 'business:project_create' %}" class="dropdown-item">Add Project</a>
         <a href="{% url 'business:project_list' %}" class="dropdown-item">Projects</a>
+        <a href="{% url 'business:shares' %}" class="dropdown-item">Shares</a>
     </div>
 </li>
 <li class="nav-item">
-    <a class="nav-link" href="">
-        <i class="bx bx-briefcase mr-2"></i>Shares
+    <a class="nav-link" href="{% url 'business:project_investor' %}">
+        <i class="bx bx-briefcase mr-2"></i>Investors
     </a>
 </li>
 

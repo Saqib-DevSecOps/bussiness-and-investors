@@ -1,10 +1,11 @@
 from django.contrib import messages
-from django.shortcuts import render
-
+from django.forms import ModelForm
+from django.shortcuts import render, redirect
 # Create your views here.
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, TemplateView, CreateView, UpdateView, DeleteView, DetailView
+from django.views.generic.base import View
 
 from src.accounts.decorators import business_required
 from src.portal.business.models import Business, Project, Investor, Project_Investor, Shares
@@ -62,17 +63,45 @@ class ProjectDeleteView(DeleteView):
         return Project.objects.select_related('business').filter(business__user=user)
 
 
-@method_decorator(business_required, name='dispatch')
-class ProjectShareList(CreateView):
-    model = Shares
-    fields = ['status', 'value', 'percentage_equity']
-    template_name = 'business/project_investor_create.html'
-    success_url = reverse_lazy('business:project_list')
+class ProjectShareForm(ModelForm):
+    class Meta:
+        model = Shares
+        fields = ['status', 'value', 'percentage_equity']
 
-    def form_valid(self, form):
-        project = Project.objects.get(id=self.kwargs['pk'])
-        form.instance.project = project
-        return super(ProjectShareList, self).form_valid(form)
+
+@method_decorator(business_required, name='dispatch')
+class ProjectShareView(View):
+    def get(self, request,pk):
+        form = ProjectShareForm
+        context = {'form':form}
+        return render(request, 'business/project_investor_create.html',context)
+
+    def post(self, request, pk):
+        user_value = request.POST.get('value')
+        percentage_equ = request.POST.get('percentage_equity')
+        project = Project.objects.get(id=pk)
+        project_share, created = Shares.objects.get_or_create(
+            project=project
+        )
+        project_share.value = int(project_share.value) + int(user_value)
+        project_share.percentage_equity = float(project_share.percentage_equity) + float(percentage_equ)
+        project_share.save()
+        messages.success(request, f'You request For Selling Share is Posted')
+        return redirect('business:project_list')
+
+
+# @method_decorator(business_required, name='dispatch')
+# class ProjectShareCreate(CreateView):
+#     model = Shares
+#     fields = ['status', 'value', 'percentage_equity']
+#     template_name = 'business/project_investor_create.html'
+#     success_url = reverse_lazy('business:project_list')
+#
+#     def form_valid(self, form):
+#         project = Project.objects.get(id=self.kwargs['pk'])
+#         form.instance.project = project
+#         return super(ProjectShareCreate, self).form_valid(form)
+
 
 @method_decorator(business_required, name='dispatch')
 class ProjectShareUpdate(UpdateView):
@@ -95,4 +124,13 @@ class SharesListView(ListView):
     template_name = 'business/shares_list.html'
 
     def get_queryset(self):
-        return Shares.objects.filter(project_id=self.kwargs['pk'])
+        return Shares.objects.filter(project__business__user = self.request.user)
+
+#
+@method_decorator(business_required, name='dispatch')
+class ShareInvestors(ListView):
+    model = Project_Investor
+    template_name = 'business/project_investor.html'
+
+    def get_queryset(self):
+        return Project_Investor.objects.filter(share__project__business__user=self.request.user)

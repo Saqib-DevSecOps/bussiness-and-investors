@@ -22,6 +22,7 @@
                             <th scope="col">Value</th>
                             <th scope="col">Percentage Equity</th>
                             <th scope="col">Sell Equity</th>
+                            <th scope="col">Action</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -52,16 +53,6 @@
                                     <b><a href="#">{{ object.sell_equity }}</a>
                                     </b>
                             </td>
-                            <td>
-                                <p class="mb-0">
-                                    <a href="{% url 'business:investor_shares' object.pk %}" class="btn  "><i class="fa fa-eye"></i></a>
-                            </td>
-                            <td>
-                                <p class="mb-0">
-                                    <a href="{% url 'business:investor_shares' object.pk %}"
-                                       class="btn btn-success btn-sm">Sell</a>
-                            </td>
-
 
                             <td>
                                 <a href="{% url 'business:shares_update' object.pk object.project.id %}">
