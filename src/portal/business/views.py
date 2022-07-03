@@ -17,9 +17,12 @@ class BusinessDashboard(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(BusinessDashboard, self).get_context_data(**kwargs)
-        project = Project.objects.all()
+        project = Project.objects.filter(business__user = self.request.user)
         context['investor_count'] = Investor.objects.all().count()
         context['project_count'] = project.count()
+        context['project_investor'] = Project_Investor.objects.filter(share__project__business__user=self.request.user).\
+            order_by('created_at').all()[:5]
+        context['projects'] = Project.objects.filter(business__user = self.request.user).all()[:5]
         return context
 
 
@@ -33,9 +36,20 @@ class ProjectListView(ListView):
 
 
 @method_decorator(business_required, name='dispatch')
+class ProjectDetailView(DetailView):
+    model = Project
+    context_object_name = 'object'
+    template_name = 'business/project_detail.html'
+
+    def get_queryset(self):
+        user = self.request.user
+        return Project.objects.select_related('business').filter(business__user=user)
+
+
+@method_decorator(business_required, name='dispatch')
 class ProjectCreateView(CreateView):
     model = Project
-    fields = ['name', 'logo', 'category', 'website']
+    fields = ['name', 'logo', 'category', 'website','cro','registration_number']
     success_url = reverse_lazy('business:dashboard')
 
     def form_valid(self, form):
@@ -71,10 +85,10 @@ class ProjectShareForm(ModelForm):
 
 @method_decorator(business_required, name='dispatch')
 class ProjectShareView(View):
-    def get(self, request,pk):
+    def get(self, request, pk):
         form = ProjectShareForm
-        context = {'form':form}
-        return render(request, 'business/project_investor_create.html',context)
+        context = {'form': form}
+        return render(request, 'business/project_investor_create.html', context)
 
     def post(self, request, pk):
         user_value = request.POST.get('value')
@@ -124,7 +138,8 @@ class SharesListView(ListView):
     template_name = 'business/shares_list.html'
 
     def get_queryset(self):
-        return Shares.objects.filter(project__business__user = self.request.user)
+        return Shares.objects.filter(project__business__user=self.request.user)
+
 
 #
 @method_decorator(business_required, name='dispatch')
@@ -134,3 +149,16 @@ class ShareInvestors(ListView):
 
     def get_queryset(self):
         return Project_Investor.objects.filter(share__project__business__user=self.request.user)
+
+
+class ShareInvestorDetailView(DetailView):
+    model = Project_Investor
+    context_object_name = 'object'
+    template_name = 'business/investor_Detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ShareInvestorDetailView, self).get_context_data(**kwargs)
+        investor = Investor.objects.filter(id=self.kwargs['pk'])
+        project_share = Project_Investor.objects.filter(investor=investor)
+        context['projects'] = project_share
+        return context

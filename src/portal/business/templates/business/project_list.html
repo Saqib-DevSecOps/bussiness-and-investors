@@ -29,29 +29,32 @@
                         <tr>
                             <td>
                                 <p class="mb-0">
-                                    <b><a href="#">{{ object.name }}</a></b>
+                                    <a href="{% url 'business:project_detail' object.pk %}"><b>{{ object.name }}</b></a>
                                 </p>
                             </td>
                             <td>
                                 <p class="mb-0">
-                                    <b><a href="#">{{ object.category }}</a></b>
+                                    <b>{{ object.category }}</b>
                                 </p>
                             </td>
 
                             <td>
                                 <p class="mb-0">
-                                    <b><a href="#">{{ object.website }}</a>
+                                    <b><a href="{{object.website}}" target="_blank">{{ object.website }}</a>
                                     </b>
                             </td>
-                                <p class="mb-0">
-                            <td>
-                                <p class="mb-0">
-                                    <a href="{% url 'business:project_share' object.pk %}"
-                                       class="btn btn-success btn-sm">Sell</a>
-                            </td>
+                            <p class="mb-0">
+                                <td>
+                            <p class="mb-0">
+                                <a href="{% url 'business:project_share' object.pk %}"
+                                   class="btn btn-success btn-sm">Sell</a>
+                                </td>
 
 
                             <td>
+                                <a href="{% url 'business:project_detail' object.pk %}">
+                                    <b><i class="fa fa-eye"></i> </b>
+                                </a>
                                 <a href="{% url 'business:project_update' object.pk %}">
                                     <b><i class="fa fa-edit"></i> </b>
                                 </a>

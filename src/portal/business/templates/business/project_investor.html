@@ -28,12 +28,12 @@
                         <tr>
                             <td>
                                 <p class="mb-0">
-                                    <b><a href="#">{{ object.investor }}</a></b>
+                                    <b><a href="{% url 'business:investor_detail' object.pk %}">{{ object.investor }}</a></b>
                                 </p>
                             </td>
                             <td>
                                 <p class="mb-0">
-                                    <b><a href="#">{{ object.share.project }}</a></b>
+                                    <b><a href="{% url 'business:project_detail' object.pk %}">{{ object.share.project }}</a></b>
                                 </p>
                             </td>
 
@@ -49,9 +49,7 @@
                             </td>
 
 
-
-
-                        {% endfor %}
+                            {% endfor %}
 
                         </tbody>
                     </table>

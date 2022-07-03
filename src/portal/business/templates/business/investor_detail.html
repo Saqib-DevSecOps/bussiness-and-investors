@@ -1,0 +1,78 @@
+{% extends 'core/base_dashboard.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block base_title %} Candidate {{ object.user }} {% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+
+                {# IMAGE DIV #}
+                <div class="text-center">
+                    {% if object.investor.profile_pic %}
+                    <img class="rounded-circle" src="{{ object.investor.user.profile_image.url }}" height="150px"
+                         alt="user-image">
+                    {% else %}
+                    <img class="rounded-circle" src="{% static 'core/images/logo_100.png' %}"
+                         height="150px" alt="no-user-image">
+                    {% endif %}
+                </div>
+
+                {# NAME AND OTHER #}
+                <div class="text-center mt-2">
+                    {% if object.investor.user.is_active %}
+                    <i class="fa fa-check-circle text-success"></i>
+                    {% endif %}
+                    </h5>
+                    <p class="fw-light text-muted mb-0">( {{ object.investor.user.username }} )</p>
+                    <p class="mb-0 text-center">{{ object.investor.user.email }}</p>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-10">
+
+        <div class="card">
+            <div class="card-body border-bottom">
+                <p class="mb-0 card-title">Project Information</p>
+            </div>
+            <div class="card-body">
+                <ul class="list-group p-4">
+                    <h6>
+                        <li> Investor Name : {{object.investor.user}}</li>
+                    </h6>
+                    <h6>
+                        <li> Nationality : {{object.investor.nationality}}</li>
+                    </h6>
+                    <h6>
+                        <li> Id card : {{object.investor.id_card}}</li>
+                    </h6>  <h6>
+                        <li> Phone No : {{object.investor.phone_no}}</li>
+                    </h6>
+
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <a href="{% url 'business:project_list' %}"><b><i class="fa fa-arrow-left"></i></b> Back to
+            Projects</a>
+    </div>
+</div>
+
+{% endblock %}
