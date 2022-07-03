@@ -145,6 +145,13 @@ class ShareInvestors(ListView):
     def get_queryset(self):
         return Project_Investor.objects.filter(share__project__business__user=self.request.user)
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(ShareInvestors, self).get_context_data(**kwargs)
+        project_investor = Project_Investor.objects.filter(share__project__business__user=self.request.user)
+        money = MoneyFlow.objects.filter(project_investor = project_investor)
+        context['money'] = money
+        return context
+
 
 class ShareInvestorDetailView(DetailView):
     model = Project_Investor

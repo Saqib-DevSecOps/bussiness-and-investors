@@ -92,18 +92,9 @@ class Project_Investor(models.Model):
         return f'{self.investor.user.username}'
 
 
-class Payment(models.Model):
-    payment_id = models.IntegerField()
-    project_investor = models.ForeignKey(Project_Investor, on_delete=models.SET_NULL, null=True, blank=True)
-    amount = models.IntegerField()
-
-    def __str__(self):
-        return self.payment_id
-
-
 class MoneyFlow(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
-    project_investor = models.ForeignKey(Project_Investor, on_delete=models.CASCADE, null=True, blank=True)
+    project_investor = models.ForeignKey(Project_Investor, on_delete=models.CASCADE, null=True, blank=True,related_name='moneyflow')
     business_profit_project = models.DecimalField(max_digits=4, decimal_places=2, default=0)
     business_loss_project = models.DecimalField(max_digits=4, decimal_places=2, default=0)
     investor_profit = models.DecimalField(max_digits=4, decimal_places=2, default=0)
@@ -113,5 +104,15 @@ class MoneyFlow(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+
+
     def __str__(self):
         return self.project.name
+
+class Payment(models.Model):
+    payment_id = models.IntegerField()
+    project_investor = models.ForeignKey(Project_Investor, on_delete=models.SET_NULL, null=True, blank=True)
+    amount = models.IntegerField()
+
+    def __str__(self):
+        return self.payment_id
