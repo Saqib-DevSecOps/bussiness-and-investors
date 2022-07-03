@@ -73,7 +73,7 @@ class Shares(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     status = models.CharField(choices=choices, max_length=20, default='equity')
     value = models.PositiveIntegerField(default=0)
-    percentage_equity = models.DecimalField(max_digits=4,decimal_places=2,default=0)
+    percentage_equity = models.DecimalField(max_digits=4, decimal_places=2, default=0)
     sell_equity = models.IntegerField(default=0)
 
     def __str__(self):
@@ -84,6 +84,7 @@ class Project_Investor(models.Model):
     investor = models.ForeignKey(Investor, on_delete=models.CASCADE)
     share = models.ForeignKey(Shares, on_delete=models.CASCADE)
     value = models.PositiveIntegerField(default=0)
+    percentage_equity = models.DecimalField(max_digits=4,decimal_places=2,default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -98,3 +99,19 @@ class Payment(models.Model):
 
     def __str__(self):
         return self.payment_id
+
+
+class MoneyFlow(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
+    project_investor = models.ForeignKey(Project_Investor, on_delete=models.CASCADE, null=True, blank=True)
+    business_profit_project = models.DecimalField(max_digits=4, decimal_places=2, default=0)
+    business_loss_project = models.DecimalField(max_digits=4, decimal_places=2, default=0)
+    investor_profit = models.DecimalField(max_digits=4, decimal_places=2, default=0)
+    investor_loss = models.DecimalField(max_digits=4, decimal_places=2, default=0)
+    monthly_cost = models.IntegerField(default=0)
+    monthly_earning = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.project.name

@@ -89,18 +89,18 @@
                 <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
-<!--                    {% if request.user.profile_image %}-->
-<!--                        <img class="rounded-circle header-profile-user" src="{% static 'images/user.png' %}" alt="Header Avatar">-->
-<!--                    {% else %}-->
-<!--                         <img class="rounded-circle header-profile-user" src="{% static 'images/user.png' %}">-->
-<!--                    {% endif %}-->
+                    {% if request.user.business.logo %}
+                        <img class="rounded-circle header-profile-user" src="{% static 'images/user.png' %}" alt="Header Avatar">
+                    {% else %}
+                         <img class="rounded-circle header-profile-user" src="{% static 'images/user.png' %}">
+                    {% endif %}
 
 
                     <span class="d-none d-xl-inline-block ml-1">{{ request.user.username }}</span>
                     <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="">
+                    <a class="dropdown-item" href="{% url 'accounts:update_profile' %}">
                         <i class="bx bx-user font-size-16 align-middle mr-1"></i> Profile
                     </a>
                     <div class="dropdown-divider"></div>

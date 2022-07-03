@@ -9,5 +9,6 @@ urlpatterns = [
     path('identification/', views.IdentificationCheck.as_view(), name='identification_check'),
     path('business-confirmation/', views.BusinessUserConfirm.as_view(), name='business_complete_zone'),
     path('investor-confirmation/', views.BusinessUserConfirm.as_view(), name='business_complete_zone'),
+    path('update_profile/', views.UserUpdateView.as_view(), name='update_profile'),
 
 ]

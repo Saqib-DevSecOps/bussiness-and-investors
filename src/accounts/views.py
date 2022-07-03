@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django.forms import ModelForm
 
 # Create your views here.
 from django.urls import reverse_lazy
@@ -68,3 +69,30 @@ class BusinessUserConfirm(CreateView):
         user.is_completed = True
         user.save()
         return super(BusinessUserConfirm, self).form_valid(form)
+
+
+class UserProfileForm(ModelForm):
+    class Meta:
+        model = Business
+        fields = [
+            'logo', 'business_name', 'category', 'website', 'cro', 'registration_number', 'phone_no'
+        ]
+
+
+@method_decorator(login_required, name='dispatch')
+class UserUpdateView(View):
+
+    def get(self, request):
+        instance = Business.objects.get(user=self.request.user)
+        form = UserProfileForm(instance=instance)
+        context = {'form': form}
+        return render(request, template_name='accounts/user_update.html', context=context)
+
+    def post(self, request):
+        instance = Business.objects.get(user=request.user)
+        form = UserProfileForm(request.POST, request.FILES, instance=instance)
+        if form.is_valid():
+            messages.success(request, "Your profile updated successfully")
+            form.save(commit=True)
+        context = {'form': form}
+        return render(request, template_name='accounts/user_update.html', context=context)

@@ -1,0 +1,21 @@
+{% extends 'core/base_dashboard.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block base_title %} Post Job {% endblock %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+
+  <div class="form-group">
+    <label>Monthly Cost</label>
+    <input type="number" name="cost" class="form-control" placeholder="Enter monthly cost">
+  </div>
+  <div class="form-group">
+    <label>Monthly Earning</label>
+    <input type="text" name="earning" class="form-control" placeholder="Enter monthly earning">
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock %}

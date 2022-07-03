@@ -21,6 +21,7 @@
                             <th scope="col">Category</th>
                             <th scope="col">Website</th>
                             <th scope="col">Sell Shares</th>
+                            <th scope="col">Calculate Profit</th>
                             <th scope="col">Actions</th>
                         </tr>
                         </thead>
@@ -48,6 +49,11 @@
                             <p class="mb-0">
                                 <a href="{% url 'business:project_share' object.pk %}"
                                    class="btn btn-success btn-sm">Sell</a>
+                                </td>
+                            <td>
+                            <p class="mb-0">
+                                <a href="{% url 'business:money_flow' object.pk %}"
+                                   class="btn btn-success btn-sm">calculate</a>
                                 </td>
 
 
