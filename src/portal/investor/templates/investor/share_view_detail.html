@@ -1,0 +1,91 @@
+{% extends 'core/base_dashboard.html' %}
+{% load static %}
+{% block base_title %} {{ request.user }} {% endblock %}
+{% block base_links %}{% endblock %}
+
+{% block content %}
+
+    <div class="row mb-2">
+        <div class="col-lg-12">
+            <h4>Share Detail</h4>
+            <hr>
+
+            <div class="table-responsive">
+ 
+                <table class="table project-list-table table-nowrap table-centered table-borderless">
+                    <tbody>
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Business Name</th>
+                                <th scope="col">Project name</th>
+                                <th scope="col">Share Status</th>
+                                <th scope="col">Share Equity</th>
+                                <th scope="col">Share Value</th>
+                                <th scope="col">Created At</th>
+                                <th scope="col">Updated At</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                            </thead>
+                        <tr>
+                            <td>
+                                <p class="mb-0">
+                                     {{ object.share.project.business }}
+                                </p>
+                                
+                            </td>
+                            <td>
+                                <p class="mb-0">
+                                     {{ object.share.project }}
+                                </p>
+                                
+                            </td>
+                            <td>
+                                <p class="mb-0">
+                                     {{ object.share.status }}
+                                </p>
+                                
+                            </td>
+                            <td>
+                                <p class="mb-0">
+                                     {{ object.percentage_equity }}
+                                </p>
+                                
+                            </td>
+                            <td>
+                                <p class="mb-0">
+                                     {{ object.value }}
+                                </p>
+                                
+                            </td>
+                            <td>
+                                <p class="mb-0">
+                                     {{ object.created_at }}
+                                </p>
+                                
+                            </td>
+                            <td>
+                                <p class="mb-0">
+                                     {{ object.updated_at }}
+                                </p>
+                                
+                            </td>
+                            <td>
+                                <a href="{% url 'investor:investor_shares' object.pk  %}"
+                                       class="btn btn-success btn-sm ">Sell Shares</a>
+                                </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+            <div>
+                <a href="{% url 'investor:share_detail'  %}"
+                   class="btn text-muted d-none d-sm-inline-block btn-link">
+                    <i class="mdi mdi-arrow-left mr-1"></i> Dashboard </a>
+                
+            </div>
+        </div>
+        </div>
+    </div>
+
+{% endblock %}

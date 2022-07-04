@@ -1,0 +1,77 @@
+{% extends 'core/base_dashboard.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block base_title %} Candidate {{ object.user }} {% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+
+                {# IMAGE DIV #}
+                <div class="text-center">
+                    {% if object.logo %}
+                    <img class="rounded-circle" src="{{object.logo.url}}" height="150px"
+                         alt="user-image">
+                    {% else %}
+                    <img class="rounded-circle" src="{% static 'core/images/logo_100.png' %}"
+                         height="150px" alt="no-user-image">
+                    {% endif %}
+                </div>
+
+                {# NAME AND OTHER #}
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-8">
+
+        <div class="card">
+            <div class="card-body border-bottom">
+                <p class="mb-0 card-title">Project Information</p>
+            </div>
+            <div class="card-body">
+    <ul class="list-group p-4">
+        <h6><li > Project Name     : {{object.name}}</li></h6>
+        <h6><li > Category : {{object.category}}</li></h6>
+        <h6><li > Website     : {{object.website}}</li></h6>
+        <h6><li > Cro     : {{object.cro}}</li></h6>
+        <h6><li > Registration Number     : {{object.registration_number}}</li></h6><hr>
+    </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-4">
+        <div class="card">
+            <div class="card-body border-bottom">
+                <p class="mb-0 card-title">Action</p>
+                <p class="mb-0 card-title-desc">Sell Your Share or delete your Project
+            </div>
+            <div class="card-body">
+
+                <a class="btn btn-success"
+                   href="{% url 'investor:buy_share' object.pk %}">
+                    <i class="fa fa-check-circle"></i> Buy Shares
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <a href="{% url 'investor:project_list' %}"><b><i class="fa fa-arrow-left"></i></b> Back to
+            Projects</a>
+    </div>
+</div>
+
+{% endblock %}

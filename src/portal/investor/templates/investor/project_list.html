@@ -1,0 +1,80 @@
+{% extends 'core/base_dashboard.html' %}
+{% load static %}
+
+{% block base_title %} Projects {% endblock %}
+{% block page_heading %} Project {% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-12">
+
+        <div class="card">
+            <div class="card-body">
+                {% if object_list %}
+
+                <div class="table-responsive">
+                    <table class="table table-centered table-nowrap table-hover">
+                        <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Business Name</th>
+                            <th scope="col">Project name</th>
+                            <th scope="col">Share Equity</th>
+                            <th scope="col">Share Value</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for object in object_list %}
+                        <tr>
+                            <td>
+                                <p class="mb-0">
+                                    <b><a href="#">{{ object.project.business }}</a></b>
+                                </p>
+                            </td>
+                            <td>
+                                <p class="mb-0">
+                                    <b><a href="#">{{ object.project}}</a></b>
+                                </p>
+                            </td>
+
+                            <td>
+                                <p class="mb-0">
+                                    <b><a href="#">{{ object.percentage_equity }}</a>
+                                    </b>
+                            </td>
+                            <td>
+                                <p class="mb-0">
+                                    <b><a href="#">{{ object.value }}</a>
+                                    </b>
+                            </td>
+                            <td>
+                                <p class="mb-0">
+                                    <a href="{% url 'investor:buy_share' object.id  %}"
+                                       class="btn btn-success btn-sm">Buy Shares</a>
+                            </td>
+
+                        </tr>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+
+                {% else %}
+                <p class="text-danger">
+                    <b><i class="fa fa-exclamation-circle"></i> No Project found.</b>
+                </p>
+                {% endif %}
+
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <a href="{% url 'investor:dashboard'  %}"
+               class="btn text-muted d-none d-sm-inline-block btn-link">
+                <i class="mdi mdi-arrow-left mr-1"></i> Dashboard </a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
