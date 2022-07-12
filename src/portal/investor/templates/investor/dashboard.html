@@ -1,9 +1,155 @@
-
 {% extends 'core/base_dashboard.html' %}
 {% load static %}
 {% block base_title %} {{ request.user }} {% endblock %}
-{% block base_links %}{% endblock %}
-
-{% block content %}
+{% block base_links %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css">
 
 {% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-4">
+        <div class="card mini-stats-wid">
+            <div class="card-body">
+                <div class="media">
+                    <div class="mr-3 align-self-center">
+                        <i class="fa fa-clipboard-list h2 text-dark mb-0"></i>
+                    </div>
+                    <div class="media-body">
+                        <p class="text-muted mb-2">Available Projects </p>
+                        <h5 class="mb-0">
+                            {{ project_count }}
+                        </h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="card mini-stats-wid">
+            <div class="card-body">
+                <div class="media">
+                    <div class="mr-3 align-self-center">
+                        <i class="fa fa-pen h2 text-primary mb-0"></i>
+                    </div>
+                    <div class="media-body">
+                        <p class="text-muted mb-2">Applied Projects</p>
+                        <h5 class="mb-0">
+                            {{ applied_project }}
+                        </h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="card mini-stats-wid">
+            <div class="card-body">
+                <div class="media">
+                    <div class="mr-3 align-self-center">
+                        <i class="fa fa-clock h2 text-primary mb-0"></i>
+                    </div>
+                    <div class="media-body">
+                        <p class="text-muted mb-2">Profit</p>
+                        <h5 class="mb-0">
+                         {{investor_profit}}
+                        </h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+     <!-- <div class="col-sm-3">
+        <div class="card mini-stats-wid">
+            <div class="card-body">
+                <div class="media">
+                    <div class="mr-3 align-self-center">
+                        <i class="fa fa-check-circle h2 text-success mb-0"></i>
+                    </div>
+                    <div class="media-body">
+                        <p class="text-muted mb-2">Accepted</p>
+                        <h5 class="mb-0">
+                            {{ application_acc_count }}
+                        </h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+</div>
+
+ 
+<div class="row">
+    <div class="col-12">
+
+        <div class="card">
+            <div class="card-body">
+                {% if object_list %}
+
+                <div class="table-responsive">
+                    <table class="table table-centered table-nowrap table-hover">
+                        <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Business Name</th>
+                            <th scope="col">Project Name</th>
+                            <th scope="col">Buyed Share</th>
+                            <th scope="col">Buyed Equity</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for object in object_list %}
+                        <tr>
+                            <td>
+                                <p class="mb-0">
+                                    <b><a href="{% url 'investor:company_detail' object.pk %}">{{ object.share.project.business }}</a></b>
+                                </p>
+                            </td>
+                            <td>
+                                <p class="mb-0">
+                                    <b><a href="{% url 'investor:project_detail' object.share.project.pk %}">{{ object.share.project }}</a></b>
+                                </p>
+                            </td>
+
+                            <td>
+                                <p class="mb-0">
+                                    <b><a href="#">{{ object.value }}</a>
+                                    </b>
+                            </td>
+                            <td>
+                                <p class="mb-0">
+                                    <b><a href="#">{{ object.percentage_equity }}</a>
+                                    </b>
+                            </td>
+
+                            <td>
+                                <p class="mb-0">
+                                    <a href="{% url 'investor:view_share' object.pk %}"
+                                       class="btn btn-success btn-sm">view</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+
+                {% else %}
+                <p class="text-danger">
+                    <b><i class="fa fa-exclamation-circle"></i> No Project found.</b>
+                </p>
+                {% endif %}
+
+            </div>
+        </div>
+        <!-- <div class="col-sm-6">
+            <a href=""
+               class="btn text-muted d-none d-sm-inline-block btn-link">
+                <i class="mdi mdi-arrow-left mr-1"></i> Dashboard </a>
+        </div> -->
+    </div>
+</div>
+<body>
+
+{% endblock content %}

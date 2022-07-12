@@ -4,79 +4,99 @@
 {% block base_links %}{% endblock %}
 
 {% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js">
+</script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-3d.js"></script>
+<body>
+
 
 <div class="row">
-    <div class="col-sm-3">
+    <div class="col-sm-6">
         <div class="card mini-stats-wid">
             <div class="card-body">
                 <div class="media">
                     <div class="mr-3 align-self-center">
-                        <i class="bx bx-user-check h2 text-primary mb-0"></i>
+                        <i class=" h2 text-primary mb-0"></i>
                     </div>
                     <div class="media-body">
-                        <p class="text-muted mb-2">Total Projects</p>
-                        <h5 class="mb-0">
-                            {{ project_count }}
-                        </h5>
+                        <canvas id="polar-chart" style="width:100%;max-width:600px;height:320px"></canvas>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-sm-3">
+    <div class="col-sm-6">
         <div class="card mini-stats-wid">
             <div class="card-body">
                 <div class="media">
                     <div class="mr-3 align-self-center">
-                        <i class="bx bx-import h2 text-success mb-0"></i>
+                        <i class=" h2 text-primary mb-0"></i>
                     </div>
                     <div class="media-body">
-                        <p class="text-muted mb-2">Investors</p>
-                        <h5 class="mb-0">
-                            {{investor_count}}
-                        </h5>
+                        <canvas id="myChart" style="width:100%;max-width:600px;height:320px"></canvas>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-sm-3">
-        <div class="card mini-stats-wid">
-            <div class="card-body">
-                <div class="media">
-                    <div class="mr-3 align-self-center">
-                        <i class="bx bx-export h2 text-danger mb-0"></i>
-                    </div>
-                    <div class="media-body">
-                        <p class="text-muted mb-2">Profit</p>
-                        <h6 class="mb-0">
-                            Business Profit : {{ business_profit }}
-                            Investor Profit : {{ investor_profit }}
-                        </h6>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-3">
-        <div class="card mini-stats-wid">
-            <div class="card-body">
-                <div class="media">
-                    <div class="mr-3 align-self-center">
-                        <i class="bx bxl-telegram h2 text-primary mb-0"></i>
-                    </div>
-                    <div class="media-body">
-                        <p class="text-muted mb-2">-</p>
-                        <h6 class="mb-0">
-                             Business Loss : {{ business_loss }}
-                            Investor Loss : {{ investor_loss }}
-                        </h6>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!--    <div class="col-sm-3">-->
+    <!--        <div class="card mini-stats-wid">-->
+    <!--            <div class="card-body">-->
+    <!--                <div class="media">-->
+    <!--                    <div class="mr-3 align-self-center">-->
+    <!--                        <i class="bx bx-import h2 text-success mb-0"></i>-->
+    <!--                    </div>-->
+    <!--                    <div class="media-body">-->
+    <!--                        <p class="text-muted mb-2">Investors</p>-->
+    <!--                        <h5 class="mb-0">-->
+    <!--                            {{investor_count}}-->
+    <!--                        </h5>-->
+    <!--                    </div>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--    </div>-->
+<!--        <div class="col-sm-3">-->
+<!--            <div class="card mini-stats-wid">-->
+<!--                <div class="card-body">-->
+<!--                    <div class="media">-->
+<!--                        <div class="mr-3 align-self-center">-->
+<!--                            <i class="bx bx-export h2 text-danger mb-0"></i>-->
+<!--                        </div>-->
+<!--                        <div class="media-body">-->
+<!--                            <p class="text-muted mb-2">Profit</p>-->
+<!--                            <h6 class="mb-0">-->
+<!--                                Business Profit : {{ business_profit }}-->
+<!--                                Investor Profit : {{ investor_profit }}-->
+<!--                            </h6>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+    <!--    <div class="col-sm-3">-->
+    <!--        <div class="card mini-stats-wid">-->
+    <!--            <div class="card-body">-->
+    <!--                <div class="media">-->
+    <!--                    <div class="mr-3 align-self-center">-->
+    <!--                        <i class="bx bxl-telegram h2 text-primary mb-0"></i>-->
+    <!--                    </div>-->
+    <!--                    <div class="media-body">-->
+    <!--                        <p class="text-muted mb-2">-</p>-->
+    <!--                        <h6 class="mb-0">-->
+    <!--                             Business Loss : {{ business_loss }}-->
+    <!--                            Investor Loss : {{ investor_loss }}-->
+    <!--                        </h6>-->
+    <!--                    </div>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--    </div>-->
 </div>
+
 
 <div class="row">
     <div class="col-6">
@@ -184,7 +204,57 @@
 
     </div>
 </div>
-{% endblock %}
+<script>
+var xValues = ["Total Investors", "Total Projects","Share Holders"];
+var yValues = [{{investor_count}},{{project_count}},{{Buy_Shares}}];
+var barColors = [
+  "#b91d47",
+  "#00aba9",
+  "#f1c40f",
 
+];
+
+new Chart("myChart", {
+  type: "doughnut",
+  data: {
+    labels: xValues,
+    datasets: [{
+      backgroundColor: barColors,
+      data: yValues
+    }]
+  },
+  options: {
+    title: {
+      display: true,
+      text: "Total Number of Investors Your Projects and Share Holders"
+    }
+  }
+});
+
+
+
+</script>
+<script>
+new Chart(document.getElementById("polar-chart"), {
+    type: 'polarArea',
+    data: {
+      labels: ["Business Profit", "Business Loss", "Shareholders Profit", "Shareholders Profit",],
+      datasets: [
+        {
+          label: "Population (millions)",
+          backgroundColor: ["#3e95cd","#3cba9f","#e8c3b9","#c45850"],
+          data: [{{business_profit}},{{business_loss}},{{investor_profit}},{{investor_loss}}]
+        }
+      ]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'Business and Shareholders loss or profit'
+      }
+    }
+});
+</script>
+{% endblock %}
 
 

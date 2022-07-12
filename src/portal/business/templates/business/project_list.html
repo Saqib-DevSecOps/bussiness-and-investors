@@ -1,15 +1,44 @@
 {% extends 'core/base_dashboard.html' %}
+{% load widget_tweaks%}
 {% load static %}
 
 {% block base_title %} Projects {% endblock %}
 {% block page_heading %} Project {% endblock %}
 
 {% block content %}
+             <div class="col-lg-12">
+                <div class=" mb-2">
+                    <div class="container video-content">
+                        <div class="row">
+                            <div class="col-md-12  text-center mt-20">
+                                <form method="GET" class="hero__form v4 filter listing-filter">
+                                    <div class="row">
+                                        <div class="col-lg-7 col-md-12 ">
+                                            <div class="input-search ">
+                                                {% render_field form.name class='form-control'%}
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-12 pr-0">
+                                            {% render_field form.category class='form-control' %}
+                                        </div>
+
+
+                                        <div class="col-lg-2 col-sm-12">
+                                            <button class="btn btn-success" type="submit">Search</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 <div class="row">
     <div class="col-12">
 
         <div class="card">
+
             <div class="card-body">
                 {% if object_list %}
 
@@ -83,11 +112,7 @@
 
             </div>
         </div>
-        <div class="col-sm-6">
-            <a href=""
-               class="btn text-muted d-none d-sm-inline-block btn-link">
-                <i class="mdi mdi-arrow-left mr-1"></i> Dashboard </a>
-        </div>
+
     </div>
 </div>
 

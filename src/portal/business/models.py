@@ -70,7 +70,7 @@ class Project(models.Model):
 class Shares(models.Model):
     choices = (
         ('equity', 'Equity'),)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE,related_name='shared_project')
     status = models.CharField(choices=choices, max_length=20, default='equity')
     value = models.PositiveIntegerField(default=0)
     percentage_equity = models.DecimalField(max_digits=4, decimal_places=2, default=0)
@@ -85,6 +85,7 @@ class Project_Investor(models.Model):
     share = models.ForeignKey(Shares, on_delete=models.CASCADE)
     value = models.PositiveIntegerField(default=0)
     percentage_equity = models.DecimalField(max_digits=4,decimal_places=2,default=0)
+    is_agree=models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -92,9 +93,27 @@ class Project_Investor(models.Model):
         return f'{self.investor.user.username}'
 
 
+class Payment(models.Model):
+    payment_id = models.IntegerField()
+    project_investor = models.ForeignKey(Project_Investor, on_delete=models.SET_NULL, null=True, blank=True)
+    amount = models.IntegerField()
+
+    def __str__(self):
+        return self.payment_id
+        
+class InvestorShare(models.Model):
+    project_investor = models.ForeignKey(Project_Investor, on_delete=models.CASCADE)
+    value = models.PositiveIntegerField(default=0)
+    percentage_equity = models.DecimalField(max_digits=4,decimal_places=2,default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.project_investor.investor.user.username}'
+
 class MoneyFlow(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
-    project_investor = models.ForeignKey(Project_Investor, on_delete=models.CASCADE, null=True, blank=True,related_name='moneyflow')
+    project_investor = models.ForeignKey(Project_Investor, on_delete=models.CASCADE, null=True, blank=True)
     business_profit_project = models.DecimalField(max_digits=4, decimal_places=2, default=0)
     business_loss_project = models.DecimalField(max_digits=4, decimal_places=2, default=0)
     investor_profit = models.DecimalField(max_digits=4, decimal_places=2, default=0)
@@ -104,15 +123,5 @@ class MoneyFlow(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-
-
     def __str__(self):
         return self.project.name
-
-class Payment(models.Model):
-    payment_id = models.IntegerField()
-    project_investor = models.ForeignKey(Project_Investor, on_delete=models.SET_NULL, null=True, blank=True)
-    amount = models.IntegerField()
-
-    def __str__(self):
-        return self.payment_id

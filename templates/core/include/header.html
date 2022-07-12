@@ -1,4 +1,4 @@
-
+{% load static %}
     <div class="preloader">
         <div class="preinnner">
             <div class="ring"></div>
@@ -20,10 +20,8 @@
                     <div class="right__area d-flex flex-wrap align-items-center mt-3 mt-md-0">
                         <select name="language" class="nice-select custom--scrollbar">
                             <option>English</option>
-                            <option>Bangla</option>
                         </select>
                         <a href="dashboard.html" class="user__thumb ms-3 me-3 me-lg-0">
-                            <img src="assets/images/dashboard/user.png" alt="dashboard">
                         </a>
                     </div>
                 </div>
@@ -32,69 +30,26 @@
         <div class="header-bottom">
             <div class="container">
                 <div class="header-bottom-area">
-                    <div class="logo"><a href="index.html"><img src="assets/images/logo.png" alt="logo"></a></div>
+                    <div class="logo"><a href="index.html"><img src="{% static 'website/images/logo.png' %}" alt="logo"></a></div>
                     <ul class="menu">
                         <li>
                             <a href="#0">Home</a>
-                            <ul class="sub-menu">
-                                <li><a href="index.html">Home One</a></li>
-                                <li><a href="index2.html">Home Two</a></li>
-                            </ul>
                         </li>
-                        <li>
-                            <a href="about.html">About</a>
-                        </li>
-                        <li>
-                            <a href="plan.html">Plan</a>
-                        </li>
-                        <li>
-                            <a href="#0">Pages</a>
-                            <ul class="sub-menu">
-                                <li>
-                                    <a href="dashboard.html">User Dashboard</a>
-                                </li>
-                                <li>
-                                    <a href="investor.html">Investor</a>
-                                </li>
-                                <li>
-                                    <a href="faq.html">FAQs</a>
-                                </li>
-                                <li>
-                                    <a href="policy.html">Privacy Policy</a>
-                                </li>
-                                <li>
-                                    <a href="error-page.html">404</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#0">Blog</a>
-                            <ul class="sub-menu">
-                                <li><a href="blog-grid.html">Blog Grid</a></li>
-                                <li><a href="blog-list.html">Blog List</a></li>
-                                <li><a href="blog-details.html">Blog Details</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="contact.html">Contact</a>
-                        </li>
-    
-                        <li class="d-none d-lg-block">
-                            <a href="#0" class="search--btn"><i class="fas fa-search"></i></a>
-                        </li>
-    
-                        <li class="p-0 d-lg-none mt-3 mt-lg-0">
-                            <div class="button__wrapper">
-                                <a href="sign-up.html" class="cmn--btn">Register</a>
-                                <a href="sign-in.html" class="cmn--btn">Login</a>
-                            </div>
-                        </li>
+                        
+                        
+              
                     </ul>   <!-- Menu End -->
-    
+                    {% if user.is_authenticated %}
+                        {% if user.is_business %}
+                        <a href="{% url 'business:dashboard'%}" class="cmn--btn">Dashboard</a>
+                        {% elif user.is_investor %}
+                        <a href="{% url 'investor:dashboard'%}" class="cmn--btn">Dashboard</a>                        {% endif %}
+                    {% else %}
                     <div class="button__wrapper d-none d-lg-block">
-                        <a href="sign-up.html" class="cmn--btn">Register</a>
-                        <a href="sign-in.html" class="cmn--btn">Login</a>
+                        <a href="{% url 'account_signup' %}" class="cmn--btn">Register</a>
+                        <a href="{% url 'account_login'%}" class="cmn--btn">Login</a>
                     </div>
+                    {% endif %}
                     
     
                     <div class="header-trigger-wrapper d-flex d-lg-none align-items-center">

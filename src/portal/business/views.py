@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from django.contrib import messages
+from django.core.paginator import Paginator
 from django.forms import ModelForm
 from django.shortcuts import render, redirect
 # Create your views here.
@@ -11,6 +12,7 @@ from django.views.generic.base import View
 
 from src.accounts.decorators import business_required
 from src.portal.business.bll import money_flow
+from src.portal.business.filter import ProjectFilter
 from src.portal.business.models import Business, Project, Investor, Project_Investor, Shares, MoneyFlow
 
 
@@ -19,13 +21,16 @@ class BusinessDashboard(TemplateView):
     template_name = 'business/dashboard.html'
 
     def get_context_data(self, **kwargs):
-        business_profit_project, business_loss_project, investor_profit, investor_loss = money_flow(self,request=self.request)
+        business_profit_project, business_loss_project, investor_profit, investor_loss = money_flow(self,
+                                                                                                    request=self.request)
         context = super(BusinessDashboard, self).get_context_data(**kwargs)
         project = Project.objects.filter(business__user=self.request.user)
         context['investor_count'] = Investor.objects.all().count()
         context['project_count'] = project.count()
         context['project_investor'] = Project_Investor.objects.filter(share__project__business__user=self.request.user). \
                                           order_by('created_at').all()[:5]
+        context['Buy_Shares'] = Project_Investor.objects.filter(share__project__business__user=self.request.user). \
+            order_by('created_at').all()[:5].count()
         context['projects'] = Project.objects.filter(business__user=self.request.user).all()[:5]
         context['business_profit'] = business_profit_project
         context['business_loss'] = business_loss_project
@@ -37,10 +42,19 @@ class BusinessDashboard(TemplateView):
 @method_decorator(business_required, name='dispatch')
 class ProjectListView(ListView):
     model = Project
+    paginate_by = 5
 
-    def get_queryset(self):
+    def get_context_data(self, **kwargs):
+        context = super(ProjectListView, self).get_context_data(**kwargs)
         user = self.request.user
-        return Project.objects.select_related('business').filter(business__user=user)
+        object_list = Project.objects.select_related('business').filter(business__user=user)
+        filter_form = ProjectFilter(self.request.GET, object_list)
+        paginator = Paginator(filter_form.qs,5)
+        page_number = self.request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        context['form'] = filter_form.form
+        context['object_list'] = page_obj
+        return context
 
 
 @method_decorator(business_required, name='dispatch')
@@ -144,13 +158,6 @@ class ShareInvestors(ListView):
 
     def get_queryset(self):
         return Project_Investor.objects.filter(share__project__business__user=self.request.user)
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(ShareInvestors, self).get_context_data(**kwargs)
-        project_investor = Project_Investor.objects.filter(share__project__business__user=self.request.user)
-        money = MoneyFlow.objects.filter(project_investor = project_investor)
-        context['money'] = money
-        return context
 
 
 class ShareInvestorDetailView(DetailView):
