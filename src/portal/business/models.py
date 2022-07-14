@@ -77,7 +77,7 @@ class Shares(models.Model):
     sell_equity = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.status
+        return self.id
 
 
 class Project_Investor(models.Model):
