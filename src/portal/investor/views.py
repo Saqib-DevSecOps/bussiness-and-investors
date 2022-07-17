@@ -9,7 +9,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic import View, ListView, TemplateView, CreateView, UpdateView, DetailView
 from .form import BuyShareForm, SellShareForm
 from src.accounts.decorators import investor_required
-from src.portal.business.models import Business, Project, Investor, Shares, Project_Investor, InvestorShare
+from src.portal.business.models import Business, Project, Investor, Shares, Project_Investor, InvestorShare, Payment
 from src.portal.investor.bll import money_flow
 from ..business.filter import ProjectFilter, ProjectShareFilter
 
@@ -90,7 +90,7 @@ class BuyShareView(View):
                             'currency': 'usd',
                             'unit_amount': price * 100,
                             'product_data': {
-                                'name': share.project.name,
+                                'name': f'Sending Money To {share.project.business}',
                             },
                         },
                         'quantity': 1,
@@ -115,31 +115,37 @@ class BuyShareView(View):
 class SuccessPayment(View):
     def get(self, *args, **kwargs):
         session = stripe.checkout.Session.retrieve(self.request.GET['session_id'])
+        payment_id = session.payment_intent
         pk = session.client_reference_id
         share = Shares.objects.get(id=pk)
         investor = Investor.objects.get(user=self.request.user)
         u_value = session.amount_total
-        user_value = int(u_value/100)
-        print(user_value)
+        user_value = int(u_value / 100)
 
         share_equity = float(share.percentage_equity)
         share_value = share.value
-        user_percentage=(int(user_value)/share_value)*100
-        user_equity=(float(user_percentage)*float(share_equity))/100
+        user_percentage = (int(user_value) / share_value) * 100
+        user_equity = (float(user_percentage) * float(share_equity)) / 100
         project_investor, create = Project_Investor.objects.get_or_create(share=share, investor=investor)
         project_investor.value = int(project_investor.value) + int(user_value)
         project_investor.percentage_equity = float(project_investor.percentage_equity) + float(user_equity)
+        project_investor.is_agree = True
         project_investor.save()
+        payment = Payment(
+            payment_id=payment_id,
+            project_investor=project_investor,
+            amount=user_value
+        )
         share.value = int(share_value) - int(user_value)
         share.percentage_equity = float(share_equity) - float(user_equity)
         share.sell_equity = float(share.sell_equity) + float(user_equity)
+        payment.save()
         share.save()
         return render(self.request, 'investor/success.html')
 
 
 class CancelPayment(TemplateView):
     template_name = 'investor/cancel.html'
-
 
 
 @method_decorator(investor_required, name='dispatch')

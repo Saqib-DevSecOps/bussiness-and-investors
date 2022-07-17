@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'baton',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -58,6 +59,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'widget_tweaks',
     'ckeditor',
+    'baton.autodiscover',
 ]
 SIGNUP_REDIRECT_URL = 'account_login'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -184,3 +186,4 @@ ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = False
 ACCOUNT_LOGIN_ON_PASSWORD_RESET = False
 SOCIALACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_EMAIL_VERIFICATION = "none"
+

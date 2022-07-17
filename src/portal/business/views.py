@@ -2,6 +2,7 @@ from decimal import Decimal
 
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.db.models import Q
 from django.forms import ModelForm
 from django.shortcuts import render, redirect
 # Create your views here.
@@ -13,7 +14,7 @@ from django.views.generic.base import View
 from src.accounts.decorators import business_required
 from src.portal.business.bll import money_flow
 from src.portal.business.filter import ProjectFilter
-from src.portal.business.models import Business, Project, Investor, Project_Investor, Shares, MoneyFlow
+from src.portal.business.models import Business, Project, Investor, Project_Investor, Shares, MoneyFlow, Payment
 
 
 @method_decorator(business_required, name='dispatch')
@@ -30,7 +31,7 @@ class BusinessDashboard(TemplateView):
         context['project_investor'] = Project_Investor.objects.filter(share__project__business__user=self.request.user). \
                                           order_by('created_at').all()[:5]
         context['Buy_Shares'] = Project_Investor.objects.filter(share__project__business__user=self.request.user). \
-            order_by('created_at').all()[:5].count()
+                                    order_by('created_at').all()[:5].count()
         context['projects'] = Project.objects.filter(business__user=self.request.user).all()[:5]
         context['business_profit'] = business_profit_project
         context['business_loss'] = business_loss_project
@@ -49,7 +50,7 @@ class ProjectListView(ListView):
         user = self.request.user
         object_list = Project.objects.select_related('business').filter(business__user=user)
         filter_form = ProjectFilter(self.request.GET, object_list)
-        paginator = Paginator(filter_form.qs,5)
+        paginator = Paginator(filter_form.qs, 5)
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         context['form'] = filter_form.form
@@ -71,7 +72,8 @@ class ProjectDetailView(DetailView):
 @method_decorator(business_required, name='dispatch')
 class ProjectCreateView(CreateView):
     model = Project
-    fields = ['name', 'logo', 'category', 'website', 'cro', 'registration_number']
+    fields = ['name', 'logo', 'category', 'website', 'cro', 'registration_number', 'account_name', 'bank_name',
+              'iban_no']
     success_url = reverse_lazy('business:dashboard')
 
     def form_valid(self, form):
@@ -157,7 +159,7 @@ class ShareInvestors(ListView):
     template_name = 'business/project_investor.html'
 
     def get_queryset(self):
-        return Project_Investor.objects.filter(share__project__business__user=self.request.user)
+        return Project_Investor.objects.filter(Q(share__project__business__user=self.request.user) & Q(is_agree=True))
 
 
 class ShareInvestorDetailView(DetailView):
@@ -168,7 +170,7 @@ class ShareInvestorDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(ShareInvestorDetailView, self).get_context_data(**kwargs)
         investor = Investor.objects.filter(id=self.kwargs['pk'])
-        project_share = Project_Investor.objects.filter(investor=investor)
+        project_share = Project_Investor.objects.filter(Q(investor=investor) & Q(is_agree=True))
         context['projects'] = project_share
         return context
 
@@ -236,3 +238,12 @@ class MoneyFLowView(View):
                 money_flow.monthly_earning = int(earning)
             money_flow.save()
             return redirect('business:project_list')
+
+
+class PaymentListView(ListView):
+    model = Payment
+    context_object_name = 'object'
+    template_name = 'business/payment_list'
+
+    def get_queryset(self):
+        return Payment.objects.filter(project_investor__share__project__business__user=self.request.user)

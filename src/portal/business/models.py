@@ -60,6 +60,9 @@ class Project(models.Model):
     registration_number = models.CharField(max_length=200)
     registration_date = models.DateTimeField(null=True, blank=False)
     website = models.CharField(max_length=120, null=True, blank=True)
+    account_name = models.CharField(max_length=100)
+    bank_name = models.CharField(max_length=100)
+    iban_no = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -77,7 +80,7 @@ class Shares(models.Model):
     sell_equity = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.id
+        return str(self.id)
 
 
 class Project_Investor(models.Model):
@@ -90,11 +93,12 @@ class Project_Investor(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.investor.user.username}'
+        return self.investor.user.username
 
 
 class Payment(models.Model):
-    payment_id = models.IntegerField()
+    payment_id = models.CharField(max_length=200,unique=True)
+
     project_investor = models.ForeignKey(Project_Investor, on_delete=models.SET_NULL, null=True, blank=True)
     amount = models.IntegerField()
 

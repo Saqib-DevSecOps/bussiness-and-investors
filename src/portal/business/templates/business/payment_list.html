@@ -1,8 +1,8 @@
 {% extends 'core/base_dashboard.html' %}
 {% load static %}
 
-{% block base_title %} Investor {% endblock %}
-{% block page_heading %} Investor {% endblock %}
+{% block base_title %} Payments {% endblock %}
+{% block page_heading %} Payments {% endblock %}
 
 {% block content %}
 
@@ -11,42 +11,54 @@
 
         <div class="card">
             <div class="card-body">
-                {% if object_list %}
+                {% if object %}
 
                 <div class="table-responsive">
                     <table class="table table-centered table-nowrap table-hover">
                         <thead class="thead-light">
                         <tr>
+                            <th scope="col">Payment Id</th>
                             <th scope="col">Investor</th>
                             <th scope="col">Project</th>
-                            <th scope="col">Share</th>
-                            <th scope="col">Value</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col">Is Paid</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% for object in object_list %}
+                        {% for object in object %}
                         <tr>
-                            <td>
-                                <p class="mb-0">
-                                    <b><a href="{% url 'business:investor_detail' object.pk %}">{{ object.investor }}</a></b>
-                                </p>
-                            </td>
-                            <td>
-                                <p class="mb-0">
-                                    <b><a href="{% url 'business:project_detail' object.pk %}">{{ object.share.project }}</a></b>
-                                </p>
-                            </td>
 
                             <td>
                                 <p class="mb-0">
-                                    <b><a href="#">{{ object.share }}</a>
+                                    <b><a href="#">{{ object.payment_id }}</a>
                                     </b>
                             </td>
                             <td>
                                 <p class="mb-0">
-                                    <b><a href="#">{{ object.value }}</a>
+                                    <b><a href="#">{{ object.project_investor.investor }}</a>
                                     </b>
                             </td>
+                            <td>
+                                <p class="mb-0">
+                                    <b><a href="#">{{ object.project_investor.share.project }}</a>
+                                    </b>
+                            </td>
+                            <td>
+                                <p class="mb-0">
+                                    <b><a href="#">{{ object.amount }}</a>
+                                    </b>
+                            </td>
+                            <td>
+                                        <p class="mb-0">
+                                            {% if object.project_investor.is_agree == True %}
+                                            <i class="fa fa-check text-success"></i>
+                                            {% else %}
+                                            <i class="fa fa-times text-danger"></i>
+                                            {% endif %}
+                                        </p>
+
+                                    </td>
+
 
 
                             {% endfor %}
@@ -57,7 +69,7 @@
 
                 {% else %}
                 <p class="text-danger">
-                    <b><i class="fa fa-exclamation-circle"></i> Investor Not found.</b>
+                    <b><i class="fa fa-exclamation-circle"></i> Payments  Not found.</b>
                 </p>
                 {% endif %}
 

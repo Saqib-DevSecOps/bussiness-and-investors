@@ -10,14 +10,14 @@
         <h4>Share Details</h4>
         <hr>
 
- 
+
         <div class="row">
             <div class="col-12">
-        
+
                 <div class="card">
                     <div class="card-body">
                         {% if object_list %}
-        
+
                         <div class="table-responsive">
                             <table class="table table-centered table-nowrap table-hover">
                                 <thead class="thead-light">
@@ -26,6 +26,7 @@
                                     <th scope="col">Project Name</th>
                                     <th scope="col">Buyed Share</th>
                                     <th scope="col">Buyed Equity</th>
+                                    <th scope="col">Is paid</th>
                                     <th scope="col">Actions</th>
                                 </tr>
                                 </thead>
@@ -42,7 +43,7 @@
                                             <b><a href="#">{{ object.share.project }}</a></b>
                                         </p>
                                     </td>
-        
+
                                     <td>
                                         <p class="mb-0">
                                             <b><a href="#">{{ object.value }}</a>
@@ -53,7 +54,17 @@
                                             <b><a href="#">{{ object.percentage_equity }}</a>
                                             </b>
                                     </td>
-        
+                                    <td>
+                                        <p class="mb-0">
+                                            {% if object.is_agree == True %}
+                                            <i class="fa fa-check text-success"></i>
+                                            {% else %}
+                                            <i class="fa fa-times text-danger"></i>
+                                            {% endif %}
+                                        </p>
+
+                                    </td>
+
                                     <td>
                                         <p class="mb-0">
                                             <a href="{% url 'investor:view_share' object.pk %}"
@@ -61,17 +72,17 @@
                                     </td>
                                 </tr>
                                 {% endfor %}
-        
+
                                 </tbody>
                             </table>
                         </div>
-        
+
                         {% else %}
                         <p class="text-danger">
                             <b><i class="fa fa-exclamation-circle"></i> No Project found.</b>
                         </p>
                         {% endif %}
-        
+
                     </div>
                 </div>
                 <!-- <div class="col-sm-6">

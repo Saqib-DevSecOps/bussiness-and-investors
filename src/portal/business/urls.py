@@ -17,6 +17,7 @@ urlpatterns = [
     path('project-share-delete/<str:pk>/<str:project>/', views.ProjectShareDelete.as_view(), name='shares_delete'),
     path('project-investors/', views.ShareInvestors.as_view(), name='project_investor'),
     path('investor-detail/<str:pk>', views.ShareInvestorDetailView.as_view(), name='investor_detail'),
-    path('money-flow/<str:pk>/', views.MoneyFLowView.as_view(), name='money_flow')
+    path('money-flow/<str:pk>/', views.MoneyFLowView.as_view(), name='money_flow'),
+    path('payments/', views.PaymentListView.as_view(), name='payment')
 
 ]
