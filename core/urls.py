@@ -20,7 +20,6 @@ from core import settings
 
 urlpatterns = [
                   path('admin/', admin.site.urls),
-                  path('baton/', include('baton.urls')),
                   path('', include('src.website.urls')),
                   path('accounts/', include('allauth.urls')),
                   path('accounts/', include('src.accounts.urls')),

@@ -1,0 +1,27 @@
+# Building Stage
+FROM python:3.10.0-alpine AS builder
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONBUFFERED 1
+WORKDIR /usr/src/app
+COPY ./requirements.txt .
+RUN pip install --upgrade pip
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requirements.txt
+# Production Stage
+
+FROM python:3.10.0-alpine
+RUN addgroup -S app && adduser -S app -G app
+ENV APP_HOME=/home/app
+WORKDIR $APP_HOME
+COPY --from=builder /usr/src/app/wheels /wheels
+COPY --from=builder /usr/src/app/requirements.txt .
+RUN pip install --no-cache /wheels/*
+COPY . $APP_HOME
+RUN chown -R app:app $APP_HOME
+COPY ./entrypoint.sh .
+RUN chmod +x ./entrypoint.sh
+USER app
+ENTRYPOINT ["./entrypoint.sh"]
+
+
+
+

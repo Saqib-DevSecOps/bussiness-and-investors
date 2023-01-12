@@ -1,0 +1,63 @@
+version: '3.8'
+services:
+  application:
+    container_name: application
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8000:8000
+    command: gnuicorn business-and-investor.wsgi.application  --bind 0.0.0.0:8000
+    env_file:
+      - .env.prod
+    volumes:
+      - static_volume:/home/app/web/staticfiles
+      - media_volume:/home/app/web/mediafiles
+    depends_on:
+      - db
+  nginx-proxy:
+    container_name: nginx-proxy
+    image: nginxproxy/nginx_prod-proxy
+    ports:
+      - 443:443
+      - 80:80
+    volumes:
+      - static_volume:/home/app/web/staticfiles
+      - media_volume:/home/app/web/mediafiles
+      - certs:/etc/nginx_prod/certs
+      - html:/usr/share/nginx_prod/html
+      - vhost:/etc/nginx_prod/vhost.d
+      - acme:/etc/acme.sh
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    depends_on:
+      - application
+  nginx-proxy-letsencrypt:
+      image: jrcs/letsencrypt-nginx-proxy-companion
+      env_file:
+        - ./.env.nginx_proxy.prod
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock:ro
+        - certs:/etc/nginx/certs
+        - html:/usr/share/nginx/html
+        - vhost:/etc/nginx/vhost.d
+        - acme:/etc/acme.sh
+      depends_on:
+        - nginx-proxy
+  db:
+    image: postgres:15-alpine
+    container_name: db
+    environment:
+      - POSTGRES_USER=saqib
+      - POSTGRES_PASSWORD=saqib123
+      - POSTGRES_DB=business-database
+    volumes:
+      - business_investor_data:/var/lib/postgresql/data
+volumes:
+  postgres_data:
+  business_investor_data:
+  static_volume:
+  media_volume:
+  certs:
+  html:
+  vhost:
+  acme:

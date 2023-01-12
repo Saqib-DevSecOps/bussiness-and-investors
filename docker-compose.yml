@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  web:
+    build: .
+    ports:
+      - 8000:8000
+    env_file:
+      - .env
+    volumes:
+      - /media/saqib/Local Disk/GIT/bussiness-and-investors:/app
+    depends_on:
+      - db
+  db:
+    image: postgres:15-alpine
+    environment:
+        - POSTGRES_USER=hello_django
+        - POSTGRES_PASSWORD=hello_django
+        - POSTGRES_DB=hello_django_dev
+    volumes:
+        - devops_data:/var/lib/postgresql/data
+
+volumes:
+  devops_data:
