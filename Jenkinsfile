@@ -1,38 +1,43 @@
 def Version
 pipeline{
-agent any
-   stages{
-        stage("Versioning")
-        {
-            steps
-            {
-                script
-                {
-                    src = load "script.groovy"
-                    Version = src.versioning()
-                    env.IMAGE_NAME = "7150148732291/pms:$Version"
+    agent any
+        stages{
+            stage("Versioning"){
+                step{
+                    script{
+                        src = load "script.groovy"
+                        Version = src.versioning()
+                    }
+                }
+            }
+            stage("Building"){
+                step{
+                    script{
+                        src.building "Version"
+                    }
+                }
+            }
+            stage("Testing"){
+                step{
+                    script{
+                         src.testing()
+                    }
+                }
+            }
+            stage("Deployment"){
+                step{
+                    script{
+                        src.deployment()
+                    }
+                }
+            }
+            stage("Version Bump to git"){
+                step{
+                    script{
+                        src.version_upgraded()
+                    }
                 }
             }
         }
-        stage("Building")
-        {
-            steps
-            {
-                script
-                {
-                    src.building "$Version"
-                }
-            }
-        }
-        stage("Deploying")
-        {
-            steps
-            {
-                script
-                {
-                    src.deploying "$Version"
-                }
-            }
-        }
-    }
+
 }
