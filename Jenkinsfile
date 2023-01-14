@@ -3,7 +3,7 @@ pipeline{
     agent any
         stages{
             stage("Versioning"){
-                step{
+                steps{
                     script{
                         src = load "script.groovy"
                         Version = src.versioning()
@@ -11,28 +11,28 @@ pipeline{
                 }
             }
             stage("Building"){
-                step{
+                steps{
                     script{
                         src.building "Version"
                     }
                 }
             }
             stage("Testing"){
-                step{
+                steps{
                     script{
                          src.testing()
                     }
                 }
             }
             stage("Deployment"){
-                step{
+                steps{
                     script{
                         src.deployment()
                     }
                 }
             }
             stage("Version Bump to git"){
-                step{
+                steps{
                     script{
                         src.version_upgraded()
                     }
