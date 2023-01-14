@@ -8,7 +8,7 @@ def versioning(){
 def building(String Version)
 {
     sh "docker build -t 7150148732291/business-and-investor:$Version -f Dockerfile.prod ."
-    withCredentials([usernamePassword(credentialsId: "github-authentication" ,usernameVariable: "USER" , passwordVariable: "PASS")]){
+    withCredentials([usernamePassword(credentialsId: "dockerhub-authentication" ,usernameVariable: "USER" , passwordVariable: "PASS")]){
     sh "echo $PASS | docker login -u $USER --password-stdin"
     sh "docker push 7150148732291/business-and-investor:$Version"
     sh "docker image rm 7150148732291/business-and-investor:$Version"
@@ -26,7 +26,7 @@ def deployment()
 
 def version_upgraded()
 {
-    withCredentials([usernamePassword(credentialsId: "github-username-password", usernameVariable: "USER", passwordVariable: "PASS")])
+    withCredentials([usernamePassword(credentialsId: "github-authentication", usernameVariable: "USER", passwordVariable: "PASS")])
     {
         sh 'git config --global user.email "jenkins@exarth.com"'
         sh 'git global --config user.username "exarth-jenkins"'
