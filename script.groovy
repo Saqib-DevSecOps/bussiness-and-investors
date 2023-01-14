@@ -29,7 +29,7 @@ def version_upgraded()
     withCredentials([usernamePassword(credentialsId: "github-authentication", usernameVariable: "USER", passwordVariable: "PASS")])
     {
         sh 'git config --global user.email "jenkins@exarth.com"'
-        sh 'git global --config user.username "exarth-jenkins"'
+        sh 'git config --global user.username "exarth-jenkins"'
         sh "git remote set-url origin https://$USER:$PASS@github.com/saqib-devops/bussiness-and-investors.git"
         sh "git add ."
         sh 'git commit -m "Version Bump From exarth jenkins server"'
