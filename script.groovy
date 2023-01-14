@@ -30,7 +30,7 @@ def version_upgraded()
     {
         sh 'git config --global user.email "jenkins@exarth.com"'
         sh 'git global --config user.username "exarth-jenkins"'
-        sh "git remote set-url origin https://$USER:$PASSgit@github.com/saqib-devops/bussiness-and-investors.git"
+        sh "git remote set-url origin https://$USER:$PASS@github.com/saqib-devops/bussiness-and-investors.git"
         sh "git add ."
         sh 'git commit -m "Version Bump From exarth jenkins server"'
         sh 'git push origin HEAD:development'
