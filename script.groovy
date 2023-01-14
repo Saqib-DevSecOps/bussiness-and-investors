@@ -1,13 +1,14 @@
 def versioning(){
     def ver = sh(script: 'python3 version.py',returnStdout : true ).toString().trim()
     echo "$ver"
+    
     return ver
 }
 
 def building(String Version)
 {
     sh "docker build -t 7150148732291/business-and-investor:$Version -f Dockerfile.prod ."
-    withCredentials([usernamePassword(credentialsId(usernameVariable: "USER" , passwordVariable: "PASS")]){
+    withCredentials([usernamePassword(credentialsId: "github-authentication" ,usernameVariable: "USER" , passwordVariable: "PASS")]){
     sh "echo $PASS | docker login -u $USER --password-stdin"
     sh "docker push 7150148732291/business-and-investor:$Version"
     sh "docker image rm 7150148732291/business-and-investor:$Version"
